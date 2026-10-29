@@ -32,9 +32,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--paper)}
 .filters{display:flex;gap:18px;justify-self:center}
 .filters button{display:inline-flex;align-items:center;gap:6px}
-.dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+/* radio-style marker: ring always, centre dot when active */
+.dot{width:9px;height:9px;border:1px solid currentColor;border-radius:50%;flex:none;display:grid;place-items:center}
+.dot::after{content:"";width:3px;height:3px;border-radius:50%;background:currentColor}
 .filters button[aria-pressed="false"]{color:var(--mute)}
-.filters button[aria-pressed="false"] .dot{visibility:hidden}
+.filters button[aria-pressed="false"] .dot::after{visibility:hidden}
 .right{display:flex;gap:18px;justify-self:end}
 .bar>:first-child{justify-self:start}
 
