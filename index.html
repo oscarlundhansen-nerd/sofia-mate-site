@@ -35,7 +35,6 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
 /* radio-style marker: ring always, centre dot when active */
 .dot{width:9px;height:9px;border:1px solid currentColor;border-radius:50%;flex:none;display:grid;place-items:center}
 .dot::after{content:"";width:3px;height:3px;border-radius:50%;background:currentColor}
-.filters button[aria-pressed="false"]{color:var(--mute)}
 .filters button[aria-pressed="false"] .dot::after{visibility:hidden}
 .right{display:flex;gap:18px;justify-self:end}
 .bar>:first-child{justify-self:start}
