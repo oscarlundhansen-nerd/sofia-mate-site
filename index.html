@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sofia Maté</title>
+<meta name="description" content="Sofia Maté — stylist and creative consultant. Editorial and commercial work.">
+<style>
+/* Layout: 7-col "constellation" (3 under 1048px). Every image is a 4:5 frame; one type size throughout; only columns scale. */
+:root{
+  --paper:#ffffff; --ink:#111110; --mute:#8a8984; --veil:rgba(255,255,255,.98); --ph:#f2f1ee;
+  --ui:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --cols:7; --gx:40px; --gy:20px; --pad:20px;
+  --ease:cubic-bezier(.49,0,.53,1);
+  color-scheme:light;
+}
+@media (max-width:1048px){:root{--cols:3;--gx:40px;--gy:30px}}
+@media (max-width:900px){:root{--gx:10px;--gy:20px}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+img{max-width:100%}
+/* one font, one size */
+body{background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:11px;font-weight:500;letter-spacing:0;line-height:1.15;text-transform:uppercase;
+  padding-left:max(var(--pad),env(safe-area-inset-left,0px));padding-right:max(var(--pad),env(safe-area-inset-right,0px));padding-block:0 120px}
+button{font:inherit;letter-spacing:inherit;color:inherit;text-transform:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+p,dl,dd,figure{margin:0}
+button:focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:16px;padding-block:18px}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--paper)}
+.filters{display:flex;gap:18px;justify-self:center}
+.filters button{display:inline-flex;align-items:center;gap:6px}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+.filters button[aria-pressed="false"]{color:var(--mute)}
+.filters button[aria-pressed="false"] .dot{visibility:hidden}
+.right{display:flex;gap:18px;justify-self:end}
+.bar>:first-child{justify-self:start}
+
+.grid{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));column-gap:var(--gx);row-gap:var(--gy);padding-top:clamp(40px,6vw,100px)}
+.card{display:flex;flex-direction:column;gap:20px;min-width:0}
+@media (max-width:900px){.card{gap:12px}}
+.frame{aspect-ratio:4/5;max-width:100%;width:100%;position:relative;overflow:hidden;cursor:zoom-in;transition:opacity .4s var(--ease)}
+.frame .img{position:absolute;inset:0}
+.img img{width:100%;height:100%;object-fit:cover;display:block}
+.card{transition:transform .5s var(--ease);will-change:transform}
+.cap{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;transition:opacity .4s var(--ease)}
+@media (hover:hover) and (pointer:fine){
+  .grid.hovering .card:not(.on) .frame{opacity:.06}
+  .grid.hovering .card:not(.on) .cap{opacity:0}
+  .grid.hovering .card.on{transform:scale(1.04)}
+}
+@media (max-width:1048px){.frame,.cap{transition:none}}
+
+.lb{position:fixed;inset:0;z-index:20;background:var(--veil);display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);
+  padding:calc(18px + env(safe-area-inset-top,0px)) max(var(--pad),env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(var(--pad),env(safe-area-inset-left,0px))}
+.lb-top,.lb-bot{display:flex;justify-content:space-between;gap:16px}
+.lb-stage{display:grid;place-items:center;min-height:0;min-width:0;padding-block:24px;cursor:zoom-out;container-type:size}
+/* fit a 4:5 box inside the stage, whichever side is the limit */
+.lb-img{aspect-ratio:4/5;width:min(100%,56vh);max-width:100%}
+@supports (width:1cqh){.lb-img{width:min(100cqw,80cqh)}}
+.lb-nav{display:flex;gap:18px}
+
+.info{position:fixed;inset:0;z-index:15;background:var(--veil);overflow:auto;
+  padding:env(safe-area-inset-top,0px) max(var(--pad),env(safe-area-inset-right,0px)) 60px max(var(--pad),env(safe-area-inset-left,0px))}
+/* info sits in the menu's centre column, top edge level with the menu */
+.info-bar{grid-template-columns:1fr minmax(0,340px) 1fr}
+.info-in{display:grid;gap:30px;justify-self:stretch}
+.info p{max-width:42ch}
+.info dl{display:grid;gap:16px}
+.info dt{color:var(--mute)}.info dd{margin-top:4px}
+
+@media (max-width:720px){
+  .bar{grid-template-columns:1fr auto;row-gap:10px}
+  .filters{grid-column:1/3;grid-row:2;justify-self:start}
+  .info-bar{grid-template-columns:1fr auto}
+  .info-in{grid-column:1/3;grid-row:2;padding-top:20px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <button data-act="home">Sofia Maté</button>
+  <nav class="filters" aria-label="Filter">
+    <button data-f="editorial" aria-pressed="true"><span class="dot"></span>Editorial</button>
+    <button data-f="commercial" aria-pressed="true"><span class="dot"></span>Commercial</button>
+  </nav>
+  <div class="right"><button data-act="info">Info</button></div>
+</header>
+
+<main class="grid" id="grid"></main>
+
+<section class="info" id="info" hidden role="dialog" aria-label="Info">
+  <div class="bar info-bar">
+    <span>Sofia Maté</span>
+    <div class="info-in">
+      <p>Sofia Maté is a stylist and creative consultant working across editorial and commercial projects, from magazine stories to campaigns and brand direction.</p>
+      <dl>
+        <div><dt>Contact</dt><dd>hello@sofiamate.com</dd></div>
+        <div><dt>Instagram</dt><dd>@sofiamate</dd></div>
+        <div><dt>Based in</dt><dd>Stockholm</dd></div>
+        <div><dt>Services</dt><dd>Editorial styling<br>Campaign styling<br>Creative consulting</dd></div>
+      </dl>
+    </div>
+    <button data-act="info-close" class="right">Close</button>
+  </div>
+</section>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image">
+  <div class="lb-top"><span id="lbCap"></span><button data-act="close">Close</button></div>
+  <div class="lb-stage" id="lbStage"><div class="lb-img" id="lbImg"></div></div>
+  <div class="lb-bot"><span id="lbCount"></span><div class="lb-nav"><button data-act="prev">Prev</button><button data-act="next">Next</button></div></div>
+</div>
+
+<script>
+/* ===== THE LIBRARY — the only thing you edit to update the site =====
+   1. Put the image in the images/ folder (jpg, ~2000px long side, ideally already 4:5).
+   2. Add a line at the TOP of the list:
+        {type:"editorial", title:"Vogue Scandinavia: Photographer", src:"images/filename.jpg"},
+      type is "editorial" or "commercial". Newest first.
+   3. Drag the whole folder into Netlify (Deploys tab). Done.
+   Lines without src show a tonal placeholder; delete them once real images are in. */
+const LIBRARY = [
+  {type:"commercial",title:"Brand: AW26 Campaign",     tone:["#2b2f45","#9aa3c9"]},
+  {type:"editorial", title:"Publication: Photographer",tone:["#d8cdb8","#8c7b62"]},
+  {type:"editorial", title:"Issue 12: Photographer",   tone:["#e9e4dc","#b7a99a"]},
+  {type:"commercial",title:"Brand: Lookbook SS27",     tone:["#5a1a1c","#c9604a"]},
+  {type:"editorial", title:"Magazine: Cover Story",    tone:["#1b1b1a","#6e6b66"]},
+  {type:"commercial",title:"Brand: Eyewear",           tone:["#d6d2c8","#3c3a35"]},
+  {type:"editorial", title:"Issue 09: Photographer",   tone:["#c9b7d9","#4a2f66"]},
+  {type:"editorial", title:"Still Life Study",         tone:["#f1f0ec","#9fa3a8"]},
+  {type:"commercial",title:"Brand: Holiday Gifting",   tone:["#b88a3c","#3a2410"]},
+  {type:"editorial", title:"Publication: Portrait",    tone:["#a8b0a4","#38443a"]},
+  {type:"commercial",title:"Brand: Knitwear AW26",     tone:["#8a5a3a","#e3cbb1"]},
+  {type:"editorial", title:"Issue 07: Photographer",   tone:["#d5dde2","#55687a"]},
+  {type:"commercial",title:"Brand: Fragrance Launch",  tone:["#1f1c2c","#d14a3c"]},
+  {type:"editorial", title:"Magazine: Menswear Story", tone:["#ede7df","#5e534a"]},
+  {type:"editorial", title:"Publication: Photographer",tone:["#7e8a96","#1c2026"]},
+  {type:"commercial",title:"Brand: Footwear SS27",     tone:["#f3f2ef","#202020"]},
+  {type:"editorial", title:"Issue 04: Photographer",   tone:["#c7a58b","#5b3a29"]},
+  {type:"commercial",title:"Brand: Jewellery",         tone:["#0e0e0e","#a88b4f"]},
+  {type:"editorial", title:"Magazine: Beauty",         tone:["#e7c9c3","#9b4f4a"]},
+  {type:"commercial",title:"Brand: Store Opening",     tone:["#c58f4e","#e9d9bd"]},
+  {type:"editorial", title:"Publication: Photographer",tone:["#dfe3dc","#6c7a64"]},
+  {type:"editorial", title:"Issue 01: Photographer",   tone:["#cfcac4","#2d2a27"]},
+];
+
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const bg=t=>`radial-gradient(120% 90% at 30% 25%, ${t[0]} 0%, transparent 60%), radial-gradient(90% 80% at 75% 85%, ${t[1]} 0%, transparent 70%), linear-gradient(160deg, ${t[0]}, ${t[1]})`;
+const pad2=n=>String(n).padStart(2,'0');
+
+const grid=document.getElementById('grid');
+const on={editorial:true,commercial:true};
+let view=[];
+
+function render(){
+  view=LIBRARY.filter(i=>on[i.type]);
+  if(!view.length)return;
+  const cols=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols'))||7;
+  const r=rng(41);
+  grid.innerHTML='';
+  let i=0,row=1;
+  while(i<view.length){
+    const k=cols>=7?2+Math.floor(r()*3):1+Math.floor(r()*2);
+    const slots=[...Array(cols).keys()].sort(()=>r()-.5).slice(0,k).sort((a,b)=>a-b);
+    for(const c of slots){
+      if(i>=view.length)break;
+      const it=view[i],idx=i;
+      const card=document.createElement('figure');
+      card.className='card';card.style.cssText=`grid-column:${c+1};grid-row:${row}`;
+      card.innerHTML=`<button class="frame" aria-label="Open ${it.title}"><div class="img" style="background:${it.src?'var(--ph)':bg(it.tone)}">${it.src?`<img src="${it.src}" alt="${it.title}" loading="lazy">`:''}</div></button>
+        <figcaption class="cap"><span>${it.title}</span></figcaption>`;
+      card.addEventListener('mouseenter',()=>{grid.classList.add('hovering');card.classList.add('on')});
+      card.addEventListener('mouseleave',()=>{grid.classList.remove('hovering');card.classList.remove('on')});
+      card.querySelector('.frame').onclick=()=>openLB(idx);
+      grid.appendChild(card);i++;
+    }
+    row++;
+  }
+}
+
+/* lightbox: steps through every image of every item */
+const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg');
+let li=0;
+function openLB(i){
+  li=(i+view.length)%view.length;const it=view[li];
+  lbImg.style.background=it.src?'var(--ph)':bg(it.tone);lbImg.innerHTML=it.src?`<img src="${it.src}" alt="${it.title}">`:'';lbImg.classList.add('img');
+  document.getElementById('lbCap').textContent=it.title;
+  document.getElementById('lbCount').textContent=`${pad2(li+1)} / ${pad2(view.length)}`;
+  lb.hidden=false;document.body.style.overflow='hidden';
+}
+function closeLB(){lb.hidden=true;document.body.style.overflow=''}
+document.getElementById('lbStage').onclick=closeLB;
+document.addEventListener('keydown',e=>{if(lb.hidden)return;if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')openLB(li+1);if(e.key==='ArrowLeft')openLB(li-1)});
+let sx=null;lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+lb.addEventListener('touchend',e=>{if(sx==null)return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)openLB(li+(d<0?1:-1));sx=null});
+
+const info=document.getElementById('info');
+document.addEventListener('click',e=>{const a=e.target.closest('[data-act]')?.dataset.act;if(!a)return;
+  if(a==='close')closeLB();if(a==='prev')openLB(li-1);if(a==='next')openLB(li+1);
+  if(a==='info'){info.hidden=false;document.body.style.overflow='hidden'}
+  if(a==='info-close'){info.hidden=true;document.body.style.overflow=''}
+  if(a==='home'){info.hidden=true;scrollTo({top:0,behavior:'smooth'})}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!info.hidden){info.hidden=true;document.body.style.overflow=''}});
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
+  const f=b.dataset.f,other=f==='editorial'?'commercial':'editorial';
+  if(on[f]&&!on[other])return;
+  on[f]=!on[f];b.setAttribute('aria-pressed',on[f]);render()});
+matchMedia('(max-width:1048px)').addEventListener('change',render);
+render();
+</script>
+</body>
+</html>
