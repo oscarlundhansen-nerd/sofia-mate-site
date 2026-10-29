@@ -61,7 +61,7 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
 /* full image at its own proportions, fitted inside the stage */
 .lb-img{display:grid;place-items:center;min-height:0;min-width:0}
 /* sized to the stage itself, so tall and wide images always fit */
-.lb-img img{width:auto;height:auto;max-width:100%;max-height:calc(100vh - 140px);object-fit:contain;display:block}
+.lb-img img{cursor:pointer;width:auto;height:auto;max-width:100%;max-height:calc(100vh - 140px);object-fit:contain;display:block}
 @supports (height:1cqh){.lb-img img{max-width:100cqw;max-height:100cqh}}
 .lb-nav{display:flex;gap:18px}
 
@@ -193,7 +193,8 @@ function openLB(i){
   lb.hidden=false;document.body.style.overflow='hidden';
 }
 function closeLB(){lb.hidden=true;document.body.style.overflow=''}
-document.getElementById('lbStage').onclick=closeLB;
+// click the image for the next one; click the empty space around it to close
+document.getElementById('lbStage').onclick=e=>{if(e.target.tagName==='IMG')openLB(li+1);else closeLB()};
 document.addEventListener('keydown',e=>{if(lb.hidden)return;if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')openLB(li+1);if(e.key==='ArrowLeft')openLB(li-1)});
 let sx=null;lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
 lb.addEventListener('touchend',e=>{if(sx==null)return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)openLB(li+(d<0?1:-1));sx=null});
