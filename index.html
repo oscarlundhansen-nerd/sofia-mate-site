@@ -8,7 +8,7 @@
 <style>
 /* Layout: 7-col "constellation" (3 under 1048px). Every image is a 4:5 frame; one type size throughout; only columns scale. */
 :root{
-  --paper:#ffffff; --ink:#111110; --mute:#8a8984; --veil:rgba(255,255,255,.98); --ph:#f2f1ee;
+  --paper:#ffffff; --ink:#111110; --mute:#111110; --veil:rgba(255,255,255,.98); --ph:#f2f1ee;
   --ui:"Helvetica Neue",Helvetica,Arial,sans-serif;
   --cols:7; --gx:40px; --gy:20px; --pad:20px;
   --ease:cubic-bezier(.49,0,.53,1);
@@ -73,18 +73,19 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
 
 .info{position:fixed;inset:0;z-index:15;background:var(--veil);overflow:auto;
   padding:env(safe-area-inset-top,0px) max(var(--pad),env(safe-area-inset-right,0px)) 60px max(var(--pad),env(safe-area-inset-left,0px))}
-/* info sits in the menu's centre column, top edge level with the menu */
-.info-bar{grid-template-columns:1fr minmax(0,340px) 1fr}
-.info-in{display:grid;gap:30px;justify-self:stretch}
-.info p{max-width:42ch}
-.info dl{display:grid;gap:16px}
-.info dt{color:var(--mute)}.info dd{margin-top:4px}
+/* info: a centred title page, same type as the rest of the site */
+.info{display:flex;flex-direction:column}
+.info[hidden]{display:none}
+.info-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:28px;max-width:46ch;margin-inline:auto;padding-block:40px 80px}
+.info h1{font:inherit;margin:0}
+.info .role{margin-top:-20px}
+.info .bio{text-wrap:balance}
+.info dl{display:grid;gap:14px;margin:0}
+.info dd{margin:0}
 
 @media (max-width:720px){
   .bar{grid-template-columns:1fr auto;row-gap:10px}
   .filters{grid-column:1/3;grid-row:2;justify-self:start}
-  .info-bar{grid-template-columns:1fr auto}
-  .info-in{grid-column:1/3;grid-row:2;padding-top:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -102,18 +103,22 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
 <main class="grid" id="grid"></main>
 
 <section class="info" id="info" hidden role="dialog" aria-label="Info">
-  <div class="bar info-bar">
+  <div class="bar">
     <span>Sofia Maté</span>
-    <div class="info-in">
-      <p>Sofia Maté is a stylist and creative consultant working across editorial and commercial projects, from magazine stories to campaigns and brand direction.</p>
-      <dl>
-        <div><dt>Contact</dt><dd>hello@sofiamate.com</dd></div>
-        <div><dt>Instagram</dt><dd>@sofiamate</dd></div>
-        <div><dt>Based in</dt><dd>Stockholm</dd></div>
-        <div><dt>Services</dt><dd>Editorial styling<br>Campaign styling<br>Creative consulting</dd></div>
-      </dl>
-    </div>
+    <span></span>
     <button data-act="info-close" class="right">Close</button>
+  </div>
+  <!-- one centred column, read top to bottom like a title page -->
+  <div class="info-in">
+    <h1>Sofia Maté</h1>
+    <p class="role">Stylist &amp; Creative Consultant</p>
+    <p class="bio">Sofia Maté is a stylist and creative consultant working across editorial and commercial projects, from magazine stories to campaigns and brand direction.</p>
+    <dl>
+      <div><dt>Services</dt><dd>Editorial styling, campaign styling, creative consulting</dd></div>
+      <div><dt>Contact</dt><dd>hello@sofiamate.com</dd></div>
+      <div><dt>Instagram</dt><dd>@sofiamate</dd></div>
+    </dl>
+    <p class="sign">Stockholm</p>
   </div>
 </section>
 
