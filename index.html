@@ -64,10 +64,10 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
 .lb-img img{cursor:pointer;width:auto;height:auto;max-width:100%;max-height:calc(100vh - 140px);object-fit:contain;display:block}
 @supports (height:1cqh){.lb-img img{max-width:100cqw;max-height:100cqh}}
 .lb-nav{display:flex;gap:18px}
-/* thin arrow cursors on desktop: left half of the image goes back, right half forward */
+/* thin black chevron cursors on desktop: left half of the image goes back, right half forward */
 @media (hover:hover) and (pointer:fine){
-  .lb-stage[data-dir="prev"] img{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2228%22%20height%3D%2214%22%20viewBox%3D%220%200%2028%2014%22%3E%3Cg%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M27%207H1M7%201L1%207l6%206%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M27%207H1M7%201L1%207l6%206%22%20stroke%3D%22%23111%22%20stroke-width%3D%221%22/%3E%3C/g%3E%3C/svg%3E") 14 7, w-resize}
-  .lb-stage[data-dir="next"] img{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2228%22%20height%3D%2214%22%20viewBox%3D%220%200%2028%2014%22%3E%3Cg%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M1%207h26M21%201l6%206-6%206%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M1%207h26M21%201l6%206-6%206%22%20stroke%3D%22%23111%22%20stroke-width%3D%221%22/%3E%3C/g%3E%3C/svg%3E") 14 7, e-resize}
+  .lb-stage[data-dir="prev"] img{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2210%22%20height%3D%2216%22%20viewBox%3D%220%200%2010%2016%22%3E%3Cpath%20d%3D%22M8%201L1%208l7%207%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 5 8, w-resize}
+  .lb-stage[data-dir="next"] img{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2210%22%20height%3D%2216%22%20viewBox%3D%220%200%2010%2016%22%3E%3Cpath%20d%3D%22M2%201l7%207-7%207%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 5 8, e-resize}
 }
 
 
