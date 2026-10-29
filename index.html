@@ -158,7 +158,7 @@ let view=[];
 
 function render(){
   view=ORDER.filter(i=>on[i.type]);
-  if(!view.length)return;
+  if(!view.length){on.editorial=on.commercial=true;view=ORDER.slice()}
   const cols=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols'))||7;
   const r=rng(SEED+7);
   grid.innerHTML='';
@@ -207,8 +207,10 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-act]')?.da
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!info.hidden){info.hidden=true;document.body.style.overflow=''}});
 document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
   const f=b.dataset.f,other=f==='editorial'?'commercial':'editorial';
-  if(on[f]&&!on[other])return;
-  on[f]=!on[f];b.setAttribute('aria-pressed',on[f]);render()});
+  // never let both go off: clicking the only active one switches to the other
+  if(on[f]&&!on[other]){on[f]=false;on[other]=true}else on[f]=!on[f];
+  if(!on.editorial&&!on.commercial){on.editorial=on.commercial=true}
+  document.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',on[x.dataset.f]));render()});
 matchMedia('(max-width:1048px)').addEventListener('change',render);
 render();
 </script>
