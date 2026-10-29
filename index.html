@@ -58,9 +58,9 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
   padding:calc(18px + env(safe-area-inset-top,0px)) max(var(--pad),env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(var(--pad),env(safe-area-inset-left,0px))}
 .lb-top,.lb-bot{display:flex;justify-content:space-between;gap:16px}
 .lb-stage{display:grid;place-items:center;min-height:0;min-width:0;padding-block:24px;cursor:zoom-out;container-type:size}
-/* fit a 4:5 box inside the stage, whichever side is the limit */
-.lb-img{aspect-ratio:4/5;width:min(100%,56vh);max-width:100%}
-@supports (width:1cqh){.lb-img{width:min(100cqw,80cqh)}}
+/* full image at its own proportions, fitted inside the stage */
+.lb-img{width:100%;height:100%;display:grid;place-items:center;min-height:0}
+.lb-img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
 .lb-nav{display:flex;gap:18px}
 
 .info{position:fixed;inset:0;z-index:15;background:var(--veil);overflow:auto;
@@ -124,31 +124,12 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
    3. Drag the whole folder into Netlify (Deploys tab). Done.
    Lines without src show a tonal placeholder; delete them once real images are in. */
 const LIBRARY = [
+  {type:"editorial", title:"Vogue Italia", src:"images/vogue-italia-editorial.jpg"},
+  {type:"commercial",title:"Aesop Still Life", src:"images/aesop-still-life.jpg"},
+  {type:"commercial",title:"EA7 Campaign", src:"images/ea7-campaign.jpg"},
   {type:"editorial", title:"Dazed Beauty", src:"images/dazed-editorial.jpg"},
   {type:"commercial",title:"Barbour Campaign", src:"images/barbour-commercial.jpg"},
   {type:"editorial", title:"Loewe Editorial", src:"images/loewe-editorial.jpg"},
-  {type:"commercial",title:"Brand: AW26 Campaign",     tone:["#2b2f45","#9aa3c9"]},
-  {type:"editorial", title:"Publication: Photographer",tone:["#d8cdb8","#8c7b62"]},
-  {type:"editorial", title:"Issue 12: Photographer",   tone:["#e9e4dc","#b7a99a"]},
-  {type:"commercial",title:"Brand: Lookbook SS27",     tone:["#5a1a1c","#c9604a"]},
-  {type:"editorial", title:"Magazine: Cover Story",    tone:["#1b1b1a","#6e6b66"]},
-  {type:"commercial",title:"Brand: Eyewear",           tone:["#d6d2c8","#3c3a35"]},
-  {type:"editorial", title:"Issue 09: Photographer",   tone:["#c9b7d9","#4a2f66"]},
-  {type:"editorial", title:"Still Life Study",         tone:["#f1f0ec","#9fa3a8"]},
-  {type:"commercial",title:"Brand: Holiday Gifting",   tone:["#b88a3c","#3a2410"]},
-  {type:"editorial", title:"Publication: Portrait",    tone:["#a8b0a4","#38443a"]},
-  {type:"commercial",title:"Brand: Knitwear AW26",     tone:["#8a5a3a","#e3cbb1"]},
-  {type:"editorial", title:"Issue 07: Photographer",   tone:["#d5dde2","#55687a"]},
-  {type:"commercial",title:"Brand: Fragrance Launch",  tone:["#1f1c2c","#d14a3c"]},
-  {type:"editorial", title:"Magazine: Menswear Story", tone:["#ede7df","#5e534a"]},
-  {type:"editorial", title:"Publication: Photographer",tone:["#7e8a96","#1c2026"]},
-  {type:"commercial",title:"Brand: Footwear SS27",     tone:["#f3f2ef","#202020"]},
-  {type:"editorial", title:"Issue 04: Photographer",   tone:["#c7a58b","#5b3a29"]},
-  {type:"commercial",title:"Brand: Jewellery",         tone:["#0e0e0e","#a88b4f"]},
-  {type:"editorial", title:"Magazine: Beauty",         tone:["#e7c9c3","#9b4f4a"]},
-  {type:"commercial",title:"Brand: Store Opening",     tone:["#c58f4e","#e9d9bd"]},
-  {type:"editorial", title:"Publication: Photographer",tone:["#dfe3dc","#6c7a64"]},
-  {type:"editorial", title:"Issue 01: Photographer",   tone:["#cfcac4","#2d2a27"]},
 ];
 
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -156,14 +137,17 @@ const bg=t=>`radial-gradient(120% 90% at 30% 25%, ${t[0]} 0%, transparent 60%), 
 const pad2=n=>String(n).padStart(2,'0');
 
 const grid=document.getElementById('grid');
+const SEED=Math.floor(Math.random()*1e9);
+// shuffle once per visit, so every refresh gives a new order
+const ORDER=(()=>{const r=rng(SEED),a=LIBRARY.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a})();
 const on={editorial:true,commercial:true};
 let view=[];
 
 function render(){
-  view=LIBRARY.filter(i=>on[i.type]);
+  view=ORDER.filter(i=>on[i.type]);
   if(!view.length)return;
   const cols=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols'))||7;
-  const r=rng(41);
+  const r=rng(SEED+7);
   grid.innerHTML='';
   let i=0,row=1;
   while(i<view.length){
@@ -190,7 +174,7 @@ const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg');
 let li=0;
 function openLB(i){
   li=(i+view.length)%view.length;const it=view[li];
-  lbImg.style.background=it.src?'var(--ph)':bg(it.tone);lbImg.innerHTML=it.src?`<img src="${it.src}" alt="${it.title}">`:'';lbImg.classList.add('img');
+  lbImg.innerHTML=`<img src="${it.src}" alt="${it.title}">`;
   document.getElementById('lbCap').textContent=it.title;
   document.getElementById('lbCount').textContent=`${pad2(li+1)} / ${pad2(view.length)}`;
   lb.hidden=false;document.body.style.overflow='hidden';
