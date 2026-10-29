@@ -64,6 +64,12 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background
 .lb-img img{cursor:pointer;width:auto;height:auto;max-width:100%;max-height:calc(100vh - 140px);object-fit:contain;display:block}
 @supports (height:1cqh){.lb-img img{max-width:100cqw;max-height:100cqh}}
 .lb-nav{display:flex;gap:18px}
+/* thin arrow cursors on desktop: left half of the image goes back, right half forward */
+@media (hover:hover) and (pointer:fine){
+  .lb-stage[data-dir="prev"] img{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2228%22%20height%3D%2214%22%20viewBox%3D%220%200%2028%2014%22%3E%3Cg%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M27%207H1M7%201L1%207l6%206%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M27%207H1M7%201L1%207l6%206%22%20stroke%3D%22%23111%22%20stroke-width%3D%221%22/%3E%3C/g%3E%3C/svg%3E") 14 7, w-resize}
+  .lb-stage[data-dir="next"] img{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2228%22%20height%3D%2214%22%20viewBox%3D%220%200%2028%2014%22%3E%3Cg%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M1%207h26M21%201l6%206-6%206%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M1%207h26M21%201l6%206-6%206%22%20stroke%3D%22%23111%22%20stroke-width%3D%221%22/%3E%3C/g%3E%3C/svg%3E") 14 7, e-resize}
+}
+
 
 .info{position:fixed;inset:0;z-index:15;background:var(--veil);overflow:auto;
   padding:env(safe-area-inset-top,0px) max(var(--pad),env(safe-area-inset-right,0px)) 60px max(var(--pad),env(safe-area-inset-left,0px))}
@@ -193,8 +199,11 @@ function openLB(i){
   lb.hidden=false;document.body.style.overflow='hidden';
 }
 function closeLB(){lb.hidden=true;document.body.style.overflow=''}
-// click the image for the next one; click the empty space around it to close
-document.getElementById('lbStage').onclick=e=>{if(e.target.tagName==='IMG')openLB(li+1);else closeLB()};
+// click the left half of the image to go back, the right half to go forward; click around it to close
+const stage=document.getElementById('lbStage');
+const side=e=>{const r=e.target.getBoundingClientRect();return e.clientX<r.left+r.width/2?'prev':'next'};
+stage.addEventListener('mousemove',e=>{if(e.target.tagName==='IMG')stage.dataset.dir=side(e)});
+stage.onclick=e=>{if(e.target.tagName==='IMG'){const d=side(e);openLB(li+(d==='prev'?-1:1));stage.dataset.dir=d}else closeLB()};
 document.addEventListener('keydown',e=>{if(lb.hidden)return;if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')openLB(li+1);if(e.key==='ArrowLeft')openLB(li-1)});
 let sx=null;lb.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
 lb.addEventListener('touchend',e=>{if(sx==null)return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)openLB(li+(d<0?1:-1));sx=null});
